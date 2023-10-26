@@ -12,10 +12,10 @@ class AdminFilter(Filter):
         try:
             sql = 'select id from bot_admins where disable=0'
             res = query(sql)
-            if res is not None and res is not False and  len(res) > 0:
+            if res is not None and res is not False and len(res) > 0:
                 admins = []
                 for r in res:
-                    admins.append(res[r])
+                    admins.append(r['id'])
                 if len(admins) > 0:
                     if m.from_user.id in admins:
                         return True
