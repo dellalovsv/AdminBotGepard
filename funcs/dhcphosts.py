@@ -1,7 +1,7 @@
-# from . import query
+from . import Session
 from config import CfgIPPools
-
-from datetime import datetime as dt
+from funcs import dt
+from funcs.models.dhcphosts import Lease as model_lease
 
 from netaddr import IPAddress
 
@@ -11,41 +11,24 @@ class Lease:
         self.table = 'dhcphosts_leases'
 
     def get_online(self):
-        try:
-            sql = f'select count(*) as count from {self.table} where ends>=%s'
-            res = query(sql, dt.now().strftime('%Y-%m-%d %H:%M:%S'))
-            if res is not None and res is not False and len(res) > 0:
-                return res[0]['count']
-            else:
-                return None
-        except Exception as e:
-            print(f'FUNCS.DHCPHOSTS.LEASE.GET_ONLINE (ERROR): {e}')
-            return False
+        with Session() as session:
+            online = session.query(model_lease).filter(model_lease.ends >= dt.get_now()[0]).all()
+            return len(online)
 
     def get_neg_dep(self):
-        try:
-            begin_ip = int(IPAddress(CfgIPPools.neg_dep[0]))
-            end_ip = int(IPAddress(CfgIPPools.neg_dep[1]))
-            sql = f'select count(*) as count from {self.table} where ends>=%s and ip>=%s and ip<=%s'
-            res = query(sql, dt.now().strftime('%Y-%m-%d %H:%M:%S'), begin_ip, end_ip)
-            if res is not None and res is not False and len(res) > 0:
-                return res[0]['count']
-            else:
-                return None
-        except Exception as e:
-            print(f'FUNCS.DHCPHOSTS.LEASE.GET_NEG_DEP (ERROR): {e}')
-            return False
+        with Session() as session:
+            neg_dep = session.query(model_lease).filter(
+                model_lease.ends > dt.get_now()[0],
+                model_lease.ip >= int(IPAddress(CfgIPPools.neg_dep[0])),
+                model_lease.ip <= int(IPAddress(CfgIPPools.neg_dep[1]))
+            ).all()
+            return len(neg_dep)
 
     def get_unk_dev(self):
-        try:
-            begin_ip = int(IPAddress(CfgIPPools.unk_dev[0]))
-            end_ip = int(IPAddress(CfgIPPools.unk_dev[1]))
-            sql = f'select count(*) as count from {self.table} where ends>=%s and ip>=%s and ip<=%s'
-            res = query(sql, dt.now().strftime('%Y-%m-%d %H:%M:%S'), begin_ip, end_ip)
-            if res is not None and res is not False and len(res) > 0:
-                return res[0]['count']
-            else:
-                return None
-        except Exception as e:
-            print(f'FUNCS.DHCPHOSTS.LEASE.GET_UNK_DEV (ERROR): {e}')
-            return False
+        with Session() as session:
+            unk_dev = session.query(model_lease).filter(
+                model_lease.ends >= dt.get_now()[0],
+                model_lease.ip >= int(IPAddress(CfgIPPools.unk_dev[0])),
+                model_lease.ip <= int(IPAddress(CfgIPPools.unk_dev[1]))
+            ).all()
+            return len(unk_dev)
