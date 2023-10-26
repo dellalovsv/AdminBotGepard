@@ -1,4 +1,4 @@
-from . import query
+# from . import query
 from config import CfgIPPools
 
 from datetime import datetime as dt

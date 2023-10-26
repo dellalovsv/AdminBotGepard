@@ -13,12 +13,7 @@ start_router = Router()
 
 @start_router.message(AdminFilter(), Command('start', 'info'))
 async def start_cmd(m: Message):
-    await m.answer(msg_start.info % (
-        dt.get_now()[1],
-        Lease().get_online(),
-        Lease().get_neg_dep(),
-        Lease().get_unk_dev()
-    ))
+    await m.answer(f'Hello... {m.from_user.username}!')
 
 
 @start_router.message(AdminFilter(), Command('help'))
