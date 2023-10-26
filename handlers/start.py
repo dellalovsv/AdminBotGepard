@@ -5,13 +5,13 @@ from messages import start as msg_start
 
 from aiogram import Router
 from aiogram.types import Message
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 
 
 start_router = Router()
 
 
-@start_router.message(AdminFilter(), CommandStart())
+@start_router.message(AdminFilter(), Command('start', 'info'))
 async def start_cmd(m: Message):
     await m.answer(msg_start.info % (
         dt.get_now()[1],
@@ -19,3 +19,8 @@ async def start_cmd(m: Message):
         Lease().get_neg_dep(),
         Lease().get_unk_dev()
     ))
+
+
+@start_router.message(AdminFilter(), Command('help'))
+async def help_cmd(m: Message):
+    ...
