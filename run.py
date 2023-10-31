@@ -3,8 +3,9 @@ from config import Telegram
 
 # import routers
 from handlers.start import start_router
+from handlers.dillers import diller_routers
 
-from funcs import BaseModel, engine
+# from funcs import BaseModel, engine
 
 import asyncio
 import logging
@@ -17,14 +18,15 @@ async def main():
     bot = Bot(token=Telegram.token, parse_mode=ParseMode.HTML)
     dp = Dispatcher()
     dp.include_routers(
-        start_router
+        start_router,
+        diller_routers
     )
     await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    BaseModel.metadata.create_all(engine)
+    # BaseModel.metadata.create_all(engine)
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
