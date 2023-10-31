@@ -2,6 +2,7 @@ from funcs.admins import AdminFilter
 from funcs import dt
 from messages import start as msg_start
 from funcs import dhcphosts
+from keyboards.inline import main_menu
 
 from aiogram import Router
 from aiogram.types import Message
@@ -18,7 +19,7 @@ async def start_cmd(m: Message):
         dhcphosts.Lease().get_online(),
         dhcphosts.Lease().get_neg_dep(),
         dhcphosts.Lease().get_unk_dev()
-    ))
+    ), reply_markup=main_menu.kb_main_menu)
 
 
 @start_router.message(AdminFilter(), Command('help'))
