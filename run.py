@@ -4,6 +4,8 @@ from config import Telegram
 # import routers
 from handlers.start import start_router
 
+from funcs import BaseModel, engine
+
 import asyncio
 import logging
 
@@ -22,6 +24,7 @@ async def main():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
+    BaseModel.metadata.create_all(engine)
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
