@@ -1,3 +1,4 @@
+import messages.start
 from funcs.admins import AdminFilter
 from funcs import dt
 from messages import start as msg_start
@@ -5,7 +6,7 @@ from funcs import dhcphosts
 from keyboards.inline import main_menu
 
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ContentType
 from aiogram.filters import CommandStart, Command
 
 
